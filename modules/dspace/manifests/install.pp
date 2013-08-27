@@ -17,12 +17,14 @@
 define dspace::install ($owner,
                         $group             = $owner,
                         $src_dir           = "/home/${owner}/dspace-src", 
-                        $install_dir       = "/dspace", 
-                        $service_owner     = "tomcat", 
-                        $service_group     = "adm",
+                        $install_dir       = "/home/${owner}/dspace", 
+                        $service_owner     = "${owner}", 
+                        $service_group     = "${owner}",
                         $git_repo          = "git@github.com:DSpace/DSpace.git",
                         $git_branch        = "master",
                         $ant_installer_dir = "/home/${owner}/dspace-src/dspace/target/dspace-4.0-SNAPSHOT-build",
+                        $admin_email       = "dspacedemo+admin@gmail.com",
+                        $admin_passwd      = "vagrant",
                         $ensure            = present)
 {
 
@@ -103,66 +105,17 @@ define dspace::install ($owner,
      creates => "${install_dir}/webapps/xmlui",	# Only run if XMLUI webapp doesn't yet exist (NOTE: we check for a webapp's existence since this is the *last step* of the install process)
      logoutput => true,	# Send stdout to puppet log file (if any)
      require => Exec["Build DSpace installer in ${src_dir}"]
-    # require => File["$ant_installer_dir"], #don't run this step if the Ant Installer Dir doesn't yet exist, wait for it
    } 
 
 ->
-
-   # Configure Tomcat via Context Fragments
-   file { "/srv/tomcat/dspace/conf/xmlui.xml":
-     ensure => file,
-     owner => $service_owner,
-     group => $service_group,
-     mode => 0664,
-     backup => ".puppet-bak",  # If replaced, backup old settings to .puppet-bak
-     content => template("dspace/xmlui.xml.erb"),
+   # TODO: add an unless clause to this, which checks to see if the admin user already exists
+   # create an admin account for DSpace
+   exec { "Create DSpace admin account":
+     command => "/home/${owner}/dspace/bin/dspace create-administrator",
+     cwd => "/home/${owner}",
+     user => $owner,
+     logoutput => true,
+     require => Exec["Install DSpace to ${dir}"] 
    }
-   file { "/srv/tomcat/dspace/conf/jspui.xml":
-     ensure => file,
-     owner => $service_owner,
-     group => $service_group,
-     mode => 0664,
-     backup => ".puppet-bak",  # If replaced, backup old settings to .puppet-bak
-     content => template("dspace/jspui.xml.erb"),
-   }
-   file { "/srv/tomcat/dspace/conf/solr.xml":
-     ensure => file,
-     owner => $service_owner,
-     group => $service_group,
-     mode => 0664,
-     backup => ".puppet-bak",  # If replaced, backup old settings to .puppet-bak
-     content => template("dspace/solr.xml.erb"),
-   }
-   file { "/srv/tomcat/dspace/conf/oai.xml":
-     ensure => file,
-     owner => $service_owner,
-     group => $service_group,
-     mode => 0664,
-     backup => ".puppet-bak",  # If replaced, backup old settings to .puppet-bak
-     content => template("dspace/oai.xml.erb"),
-   }
-   file { "/srv/tomcat/dspace/conf/sword.xml":
-     ensure => file,
-     owner => $service_owner,
-     group => $service_group,
-     mode => 0664,
-     backup => ".puppet-bak",  # If replaced, backup old settings to .puppet-bak
-     content => template("dspace/sword.xml.erb"),
-   }
-   file { "/srv/tomcat/dspace/conf/swordv2.xml":
-     ensure => file,
-     owner => $service_owner,
-     group => $service_group,
-     mode => 0664,
-     backup => ".puppet-bak",  # If replaced, backup old settings to .puppet-bak
-     content => template("dspace/swordv2.xml.erb"),
-   }
-
-
-
-
-
-
-
 
 }

@@ -76,6 +76,8 @@ include tomcat
 
 # Create a new Tomcat instance
 tomcat::instance { 'dspace':
+   owner => "vagrant",
+   appBase => "/home/vagrant/dspace/webapps", # Tell Tomcat to load webapps from this directory
    ensure    => present,
 }
 
