@@ -23,8 +23,11 @@ define dspace::install ($owner,
                         $git_repo          = "git@github.com:DSpace/DSpace.git",
                         $git_branch        = "master",
                         $ant_installer_dir = "/home/${owner}/dspace-src/dspace/target/dspace-4.0-SNAPSHOT-build",
+                        $admin_firstname   = "DSpaceDemo",
+                        $admin_lastname    = "Admin",
                         $admin_email       = "dspacedemo+admin@gmail.com",
                         $admin_passwd      = "vagrant",
+                        $admin_language    = "en",
                         $ensure            = present)
 {
 
@@ -98,7 +101,7 @@ define dspace::install ($owner,
 ->
 
    # Install DSpace (via Ant)
-   exec { "Install DSpace to ${dir}":
+   exec { "Install DSpace to ${install_dir}":
      command => "ant fresh_install",
      cwd => $ant_installer_dir,	# Run command from this directory
      user => $owner,
@@ -108,14 +111,14 @@ define dspace::install ($owner,
    } 
 
 ->
-   # TODO: add an unless clause to this, which checks to see if the admin user already exists
-   # create an admin account for DSpace
-   exec { "Create DSpace admin account":
-     command => "/home/${owner}/dspace/bin/dspace create-administrator",
-     cwd => "/home/${owner}",
+
+   # create administrator
+   exec { "Create DSpace Administrator":
+     command => "${install_dir}/bin/dspace create-administrator -e ${admin_email} -f ${admin_firstname} -l ${admin_lastname} -p ${admin_passwd} -c ${admin_language}",
+     cwd => $install_dir,
      user => $owner,
      logoutput => true,
-     require => Exec["Install DSpace to ${dir}"] 
-   }
+     require => Exec["Install DSpace to ${install_dir}"]
+ }
 
 }

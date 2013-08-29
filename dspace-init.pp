@@ -48,6 +48,12 @@ else { # Otherwise, pass the value of $::java_version to the 'dspace' module
     }
 }
 
+# Install Vim for a more rewarding command-line-based editor experience
+class {'vim':
+   ensure => present,
+   set_as_default => true
+}
+
 # Install PostgreSQL package
 class { 'postgresql':
   charset => 'UTF8',
