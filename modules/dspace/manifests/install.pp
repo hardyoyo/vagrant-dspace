@@ -119,6 +119,18 @@ define dspace::install ($owner,
      user => $owner,
      logoutput => true,
      require => Exec["Install DSpace to ${install_dir}"]
- }
+   }
+
+->
+
+   # for convenience in troubleshooting Tomcat, let's install Psi-probe
+   exec {"download and install the Psi-probe war":
+
+     command => "wget http://psi-probe.googlecode.com/files/probe-2.3.3.zip && unzip probe-2.3.3.zip && rm probe-2.3.3.zip",
+     cwd => "${install_dir}/webapps",
+     creates => "${install_dir}/webapps/probe.war",
+     require => Exec["Install DSpace to ${install_dir}"]
+
+   }
 
 }

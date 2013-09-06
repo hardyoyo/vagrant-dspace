@@ -13,6 +13,11 @@ Package {
   require => Exec["apt-get-update"],
 }
 
+# Ensure the rcconf package is installed, we'll use it later to set runlevels of services
+package { "rcconf":
+  ensure => "installed"
+}
+
 # Global default path settings for all 'exec' commands
 Exec {
   path => "/usr/bin:/usr/sbin:/bin",
@@ -59,6 +64,8 @@ class { 'postgresql':
   charset => 'UTF8',
 }
 
+->
+
 # Setup/Configure PostgreSQL server
 class { 'postgresql::server':
   config_hash => {
@@ -71,14 +78,37 @@ class { 'postgresql::server':
   },
 }
 
+->
+
 # Create a 'dspace' database
 postgresql::db { 'dspace':
   user     => 'dspace',
   password => 'dspace'
 }
 
-# Install Tomcat package
-include tomcat
+# subclass tdonohue's Tomcat package
+class tomcat_dspace inherits tomcat { $tomcat = "tomcat7"
+    # override stuff already defined by tdonohue's module here
+ 
+    # stop the system tomcat7 service
+    # AND remove the system tomcat7 service from all runlevels
+    # BECAUSE the system tomcat7 will block the following tomcat instance from loading
+    service { 'tomcat7':
+       name      => $tomcat,
+       enable    => false,
+       ensure    => present,
+    }
+
+    # use our own version of server.xml
+    file { "/home/vagrant/tomcat/conf/server.xml" : 
+       ensure  => file,
+       owner   => vagrant,
+       group   => vagrant,
+       content => template("/vagrant/modules/tomcat/templates/server.xml.erb"),
+       notify  => "Hey, don't forget to reboot Tomcat at some point!" # we really ought to reload this instance of Tomcat at some point, but we haven't even created the init scripts for it yet... soon.
+    }
+
+}
 
 # Create a new Tomcat instance
 tomcat::instance { 'dspace':
@@ -87,8 +117,59 @@ tomcat::instance { 'dspace':
    ensure    => present,
 }
 
+->
+
+
+# Copy over Tomcat configs necessary for our vagrant-owned instance of Tomcat to run
+
+file { "/home/vagrant/tomcat/conf/tomcat-users.xml" :
+    ensure  => file,
+    owner   => vagrant,
+    group   => vagrant,
+    content => template("/vagrant/modules/tomcat/templates/tomcat-users.xml.erb"),
+}
+
+->
+
+file { "/etc/default/tomcat7-vagrant" :
+    ensure  => file,
+    owner   => root,
+    group   => root,
+    content => template("/vagrant/modules/tomcat/templates/default-tomcat7-vagrant.erb"),
+}
+
+->
+
+file { "/etc/init.d/tomcat7-vagrant" :
+    ensure  => file,
+    owner   => root,
+    group   => root,
+    content => template("/vagrant/modules/tomcat/templates/init-tomcat7-vagrant.erb"),
+}
+
+->
+
+# copy (recursively) /etc/tomcat7/policy.d to /home/vagrant/tomcat/conf, since tomcat7-instance-create doesn't do this
+# AND ensure vagrant:vagrant is the onwner of the policy.d folder (and its contents)
+exec { "copy policy.d":
+    command => "cp -r policy.d /home/vagrant/tomcat/conf/ && chown -R vagrant:vagrant /home/vagrant/tomcat/conf/policy.d",
+    cwd     => "/etc/tomcat7"
+}
+
+->
+
 # Kickoff a DSpace installation for the 'vagrant' default user
 dspace::install { vagrant-dspace:
    owner   => "vagrant",
    require => [Postgresql::Db['dspace'],Tomcat::Instance['dspace']]  # Require that PostgreSQL and Tomcat are setup
 }
+
+->
+
+# set the runlevels of tomcat7-vagrant
+# AND start the tomcat7-vagrant service
+service {"tomcat7-vagrant":
+   enable => "true",
+   ensure => "running",
+}
+
