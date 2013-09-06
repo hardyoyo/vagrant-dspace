@@ -96,22 +96,23 @@ class tomcat_dspace inherits tomcat { $tomcat = "tomcat7"
     service { 'tomcat7':
        name      => $tomcat,
        enable    => false,
-       ensure    => present,
+       ensure    => installed,
     }
 
     # use our own version of server.xml
-    file { "/home/vagrant/tomcat/conf/server.xml" : 
-       ensure  => file,
-       owner   => vagrant,
-       group   => vagrant,
-       content => template("/vagrant/modules/tomcat/templates/server.xml.erb"),
-       notify  => "Hey, don't forget to reboot Tomcat at some point!" # we really ought to reload this instance of Tomcat at some point, but we haven't even created the init scripts for it yet... soon.
-    }
+# NOT NECESSARY, the one created by the puppet module is sufficent
+#    file { "/home/vagrant/tomcat/conf/server.xml" : 
+#       ensure  => file,
+#       owner   => vagrant,
+#       group   => vagrant,
+#       content => template("/vagrant/modules/tomcat/templates/server.xml.erb"),
+#       notify  => "Hey, don't forget to reboot Tomcat at some point!" # we really ought to reload this instance of Tomcat at some point, but we haven't even created the init scripts for it yet... soon.
+#    }
 
 }
 
 # and let's use our version (may not be necessary)
-include tomcat_dspace
+#include tomcat_dspace
 
 # Create a new Tomcat instance
 tomcat::instance { 'dspace':
