@@ -110,6 +110,9 @@ class tomcat_dspace inherits tomcat { $tomcat = "tomcat7"
 
 }
 
+# and let's use our version (may not be necessary)
+include tomcat_dspace
+
 # Create a new Tomcat instance
 tomcat::instance { 'dspace':
    owner => "vagrant",
