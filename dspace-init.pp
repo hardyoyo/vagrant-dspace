@@ -86,78 +86,13 @@ postgresql::db { 'dspace':
   password => 'dspace'
 }
 
-# subclass tdonohue's Tomcat package
-class tomcat_dspace inherits tomcat { $tomcat = "tomcat7"
-    # override stuff already defined by tdonohue's module here
- 
-    # stop the system tomcat7 service
-    # AND remove the system tomcat7 service from all runlevels
-    # BECAUSE the system tomcat7 will block the following tomcat instance from loading
-    service { 'tomcat7':
-       name      => $tomcat,
-       enable    => false,
-       ensure    => installed,
-    }
-
-    # use our own version of server.xml
-# NOT NECESSARY, the one created by the puppet module is sufficent
-#    file { "/home/vagrant/tomcat/conf/server.xml" : 
-#       ensure  => file,
-#       owner   => vagrant,
-#       group   => vagrant,
-#       content => template("/vagrant/modules/tomcat/templates/server.xml.erb"),
-#       notify  => "Hey, don't forget to reboot Tomcat at some point!" # we really ought to reload this instance of Tomcat at some point, but we haven't even created the init scripts for it yet... soon.
-#    }
-
-}
-
-# and let's use our version (may not be necessary)
-#include tomcat_dspace
+include tomcat
 
 # Create a new Tomcat instance
 tomcat::instance { 'dspace':
    owner => "vagrant",
    appBase => "/home/vagrant/dspace/webapps", # Tell Tomcat to load webapps from this directory
    ensure    => present,
-}
-
-->
-
-
-# Copy over Tomcat configs necessary for our vagrant-owned instance of Tomcat to run
-
-file { "/home/vagrant/tomcat/conf/tomcat-users.xml" :
-    ensure  => file,
-    owner   => vagrant,
-    group   => vagrant,
-    content => template("/vagrant/modules/tomcat/templates/tomcat-users.xml.erb"),
-}
-
-->
-
-file { "/etc/default/tomcat7-vagrant" :
-    ensure  => file,
-    owner   => root,
-    group   => root,
-    content => template("/vagrant/modules/tomcat/templates/default-tomcat7-vagrant.erb"),
-}
-
-->
-
-file { "/etc/init.d/tomcat7-vagrant" :
-    ensure  => file,
-    owner   => root,
-    group   => root,
-    content => template("/vagrant/modules/tomcat/templates/init-tomcat7-vagrant.erb"),
-}
-
-->
-
-# copy (recursively) /etc/tomcat7/policy.d to /home/vagrant/tomcat/conf, since tomcat7-instance-create doesn't do this
-# AND ensure vagrant:vagrant is the onwner of the policy.d folder (and its contents)
-exec { "copy policy.d":
-    command => "cp -r policy.d /home/vagrant/tomcat/conf/ && chown -R vagrant:vagrant /home/vagrant/tomcat/conf/policy.d",
-    cwd     => "/etc/tomcat7"
 }
 
 ->

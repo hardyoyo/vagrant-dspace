@@ -58,7 +58,13 @@ Vagrant.configure("2") do |config|
     config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
     # Hostname for virtual machine
-    config.vm.hostname = "dspace-dev"
+    config.vm.hostname = "dspace.vagrant.dev"
+
+    # configure a private network and set this guest's IP to 192.168.50.2
+    config.vm.network "private_network", ip: "192.168.50.2"
+
+    # enable landrush
+    config.landrush.enable
 
      # Create a forwarded port mapping which allows access to a specific port
     # within the machine from a port on the host machine. In the example below,
