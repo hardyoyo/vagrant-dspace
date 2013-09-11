@@ -26,12 +26,7 @@ What Works
      and then use that Puppet module to setup Tomcat
    * WARNING: We are just pulling down the latest "master" code from camptocamp/puppet-tomcat at this time.
 
-What Doesn't Work (Yet)
----------------------------
 
-* Actually compiling/installing/configuring DSpace to run on Tomcat & PostgreSQL
-
-I hope that all of these will be coming at some point...but they aren't here yet.
 
 **If you want to help, please do.** I'd prefer solutions using [Puppet](https://puppetlabs.com/).
 
@@ -58,6 +53,16 @@ Still, it's enough to get you started with developing/building DSpace (or debug 
 It's also worth noting that you can tweak the default [`Vagrantfile`](https://github.com/tdonohue/vagrant-dspace/blob/master/Vagrantfile) to better match your own development environment. There's even a few quick settings there to get you started.
 
 If you want to destroy the VM at anytime (and start fresh again), just run `vagrant destroy`. No worries, you can always recreate a new VM with another `vagrant up`.
+
+Plugins
+-------
+
+The following Vagrant plugins are not necessarily required, but they do make using Vagrant more enjoyable.
+
+* Land Rush: https://github.com/phinze/landrush
+* Vagrant-Cachier: https://github.com/fgrehm/vagrant-cachier
+* Vagrant-Proxyconf: http://vagrantplugins.com/plugins/vagrant-proxyconf/
+* Vagrant-VBox-Snapshot: http://vagrantplugins.com/plugins/vagrant-vbox-snapshot/
 
 License
 -------
