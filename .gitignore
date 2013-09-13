@@ -1,2 +1,5 @@
 # Ignore Vagrant settings
 .vagrant/
+
+# Ignore the contents of the oracle_installers directory
+oracle_installers/*

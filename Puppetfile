@@ -7,7 +7,6 @@ forge "http://forge.puppetlabs.com"
 mod "biemond/oradb" # note, the Oracle module requires you to manually download the binary install files directly from Oracle
 # documentation available here: http://forge.puppetlabs.com/biemond/oradb
 
-
 mod "saz/vim"
 
 # Install Tim's simple Tomcat module from GitHub
