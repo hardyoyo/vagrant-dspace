@@ -86,6 +86,16 @@ define dspace::install ($owner,
 
 ->
 
+   # install the Oracle jdbc driver (only necessary if you want to use Oracle)
+   exec { "install the Oracle jdbc driver":
+     command => "mvn install:install-file -Dfile=ojdbc6-11.2.0.2.0.jar -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.2.0.2.0 -Dpackaging=jar -DgeneratePom=true",
+     cwd => '/vagrant/oracle', # Run command from this directory
+     user => $owner,
+     logoutput => true,	# Send stdout to puppet log file (if any)
+   }
+
+->
+
    # Build DSpace installer (This actually just pulls down dependencies via Maven. Nothing is compiled.)
    # (The '-Denv=vagrant' tells Maven to use the vagrant.properties file, which we created above)
    exec { "Build DSpace installer in ${src_dir}":

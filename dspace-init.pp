@@ -59,15 +59,16 @@ class {'vim':
    set_as_default => true
 }
 
-# Install PostgreSQL package
-class { 'postgresql':
-  charset => 'UTF8',
-}
-
-->
 
 
 # BEGIN PostgreSQL configuration ################
+
+# Install PostgreSQL package
+#class { 'postgresql':
+#  charset => 'UTF8',
+#}
+
+#->
 
 # Setup/Configure PostgreSQL server
 #class { 'postgresql::server':
@@ -95,8 +96,8 @@ class { 'postgresql':
 # (Note: to use the following, you will want to comment out the PostgreSQL configuration above)
 
  oradb::installdb{ '112010_Linux-x86-64':
-        version                => '11.2.0.1',
-        file                   => 'linux_11gR2_database',
+        version                => '11.2',
+        file                   => 'linux.x64_11gR2_database',
         databaseType           => 'SE',
         oracleBase             => '/oracle',
         oracleHome             => '/oracle/product/11.2/db',
@@ -105,8 +106,88 @@ class { 'postgresql':
         group                  => 'dba',
         downloadDir            => '/install',
         zipExtract             => true,
-        puppetDownloadMntPoint => '/vagrant/oracle_installers'
+        puppetDownloadMntPoint => '/vagrant/oracle'
  }
+
+ oradb::listener{'stop listener':
+        oracleBase   => '/oracle',
+        oracleHome   => '/oracle/product/11.2/db',
+        user         => 'oracle',
+        group        => 'dba',
+        action       => 'start',  
+        require      => Oradb::Net['config net8'],
+ }
+
+
+ oradb::listener{'start listener':
+        oracleBase   => '/oracle',
+        oracleHome   => '/oracle/product/11.2/db',
+        user         => 'oracle',
+        group        => 'dba',
+        action       => 'start',  
+        require      => Oradb::Listener['stop listener'],
+ }
+
+
+ oradb::database{ 'dspaceDb_Create': 
+                  oracleBase              => '/oracle',
+                  oracleHome              => '/oracle/product/11.2/db',
+                  version                 => '11.2' or "12.1", 
+                  user                    => 'oracle',
+                  group                   => 'dba',
+                  downloadDir             => '/install',
+                  action                  => 'create',
+                  dbName                  => 'dspace',
+                  dbDomain                => 'oracle.com',
+                  sysPassword             => 'dspace',
+                  systemPassword          => 'dspace',
+                  dataFileDestination     => "/oracle/oradata",
+                  recoveryAreaDestination => "/oracle/flash_recovery_area",
+                  characterSet            => "AL32UTF8",
+                  nationalCharacterSet    => "UTF8",
+                  initParams              => "open_cursors=1000,processes=600,job_queue_processes=4",
+                  sampleSchema            => 'TRUE',
+                  memoryPercentage        => "40",
+                  memoryTotal             => "800",
+                  databaseType            => "MULTIPURPOSE",                         
+                  require                 => Oradb::Listener['start listener'],
+ }
+
+oradb::dbactions{ 'stop dspaceDb': 
+                 oracleHome              => '/oracle/product/11.2/db',
+                 user                    => 'oracle',
+                 group                   => 'dba',
+                 action                  => 'stop',
+                 dbName                  => 'dspace',
+                 require                 => Oradb::Database['dspaceDb'],
+}
+
+oradb::dbactions{ 'start dspaceDb': 
+                 oracleHome              => '/oracle/product/11.2/db',
+                 user                    => 'oracle',
+                 group                   => 'dba',
+                 action                  => 'start',
+                 dbName                  => 'dspace',
+                 require                 => Oradb::Dbactions['stop dspaceDb'],
+}
+
+
+
+oradb::database{ 'dspaceDb_Delete': 
+                  oracleBase              => '/oracle',
+                  oracleHome              => '/oracle/product/11.2/db',
+                  user                    => 'oracle',
+                  group                   => 'dba',
+                  downloadDir             => '/install',
+                  action                  => 'delete',
+                  dbName                  => 'dspace',
+                  sysPassword             => 'dspace',
+                  require                 => Oradb::Dbactions['start dspaceDb'],
+}
+
+# END Oracle database configuration #####################################################################
+
+
 
 include tomcat
 

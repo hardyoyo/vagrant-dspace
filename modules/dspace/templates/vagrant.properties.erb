@@ -33,20 +33,20 @@ default.language = en_US
 ##########################
 
 # Database name ("oracle", or "postgres")
-db.name=postgres
+db.name=oracle
 
 # Uncomment the appropriate block below for your database.
 # postgres
-db.driver=org.postgresql.Driver
-db.url=jdbc:postgresql://localhost:5432/dspace
-db.username=dspace
-db.password=dspace
+#db.driver=org.postgresql.Driver
+#db.url=jdbc:postgresql://localhost:5432/dspace
+#db.username=dspace
+#db.password=dspace
 
 # oracle
-#db.driver= oracle.jdbc.OracleDriver
-#db.url=jdbc:oracle:thin:@localhost:1521:orcl
-#db.username=
-#db.password=
+db.driver= oracle.jdbc.OracleDriver
+db.url=jdbc:oracle:thin:@localhost:1521:orcl
+db.username=dspace
+db.password=dspace
 
 # Schema name - if your database contains multiple schemas, you can avoid problems with
 # retrieving the definitions of duplicate object names by specifying
