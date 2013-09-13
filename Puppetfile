@@ -8,4 +8,4 @@ mod "saz/vim"
 
 # Install Tim's simple Tomcat module from GitHub
 mod "tomcat",
-   :git => "http://github.com/tdonohue/puppet-tomcat.git"
+   :git => "http://github.com/hardyoyo/puppet-tomcat.git"
