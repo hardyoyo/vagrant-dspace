@@ -1,0 +1,47 @@
+Crawl-delay: 1
+
+
+User-agent: *
+Disallow: /browse
+Disallow: /advanced-search
+Disallow: /contact
+Disallow: /feedback
+Disallow: /forgot
+Disallow: /login
+Disallow: /register
+Disallow: /search
+Disallow: /*browse-author
+Disallow: /*items-by-author
+Disallow: /*browse-date
+Disallow: /*browse-subject
+Disallow: /*browse-title
+Disallow: /*type=author
+Disallow: /*type=dateissued
+Disallow: /*type=subject
+Disallow: /*/*.pdf.txt*
+Disallow: /*/*.doc.txt*
+Disallow: /*/*.html.txt*
+
+
+User-Agent: Googlebot
+Disallow: /browse
+Disallow: /browse-date
+Disallow: /community-list
+Disallow: /advanced-search
+Disallow: /contact
+Disallow: /feedback
+Disallow: /forgot
+Disallow: /login
+Disallow: /register
+Disallow: /search
+Disallow: /*browse-author$
+Disallow: /*items-by-author$
+Disallow: /*browse-date$
+Disallow: /*browse-subject$
+Disallow: /*browse-title$
+Disallow: /*type=author
+Disallow: /*type=dateissued
+Disallow: /*type=subject
+Disallow: /*/*.pdf.txt*
+Disallow: /*/*.doc.txt*
+Disallow: /*/*.html.txt*

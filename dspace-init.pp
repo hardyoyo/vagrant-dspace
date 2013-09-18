@@ -59,6 +59,24 @@ class {'vim':
    set_as_default => true
 }
 
+# install Apache
+class { 'apache': }
+
+# define the reverse proxy array
+$proxy_pass = [
+    {'path' => '/xmlui', 'url' => 'ajp://127.0.0.1:8009/xmlui' },
+    {'path' => '/jspui', 'url' => 'ajp://127.0.0.1:8009/jspui' },
+    {'path' => '/oai', 'url' => 'ajp://127.0.0.1:8009/oai' },
+    {'path' => '/lni', 'url' => 'ajp://127.0.0.1:8009/lni' },
+]
+
+# configure an apache name-based vhost for DSpace
+apache::vhost {'dspace.vagrant.dev':
+    port => '80',
+    docroot => '/vagrant/www/dspace',
+    proxy_pass => $proxy_pass,
+}
+
 # Install PostgreSQL package
 class { 'postgresql':
   charset => 'UTF8',

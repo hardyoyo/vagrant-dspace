@@ -71,7 +71,7 @@ Vagrant.configure("2") do |config|
 
     # BEGIN Landrush configuration ###########################################
 
-    if defined? VagrantPlugins::Landrush
+    if defined? Landrush
        # enable landrush
        config.landrush.enable
     end
