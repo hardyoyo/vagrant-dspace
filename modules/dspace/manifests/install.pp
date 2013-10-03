@@ -19,6 +19,7 @@ define dspace::install ($owner,
                         $src_dir           = "/home/${owner}/dspace-src", 
                         $install_dir       = "/home/${owner}/dspace", 
                         $tomcat_dir       = "/home/${owner}/tomcat", 
+                        $context_dir      = "/home/${owner}/tomcat/conf/Catalina/localhost", 
                         $service_owner     = "${owner}", 
                         $service_group     = "${owner}",
                         $git_repo          = "git@github.com:DSpace/DSpace.git",
@@ -40,6 +41,35 @@ define dspace::install ($owner,
         group  => "${service_group}",
         mode   => 0700,
     }
+
+->
+    # ensure that tomcat_dir/conf exists, and has proper permissions
+    file { "${tomcat_dir}/conf":
+        ensure => "directory",
+        owner  => "${service_owner}",
+        group  => "${service_group}",
+        mode   => 0770,
+    }
+
+->
+
+    # ensure that tomcat_dir/conf/Catalina exists, and has proper permissions
+    file { "${tomcat_dir}/conf/Catalina":
+        ensure => "directory",
+        owner  => "${service_owner}",
+        group  => "${service_group}",
+        mode   => 0770,
+    }
+
+->
+    # ensure that the context_dir exists, and has proper permissions
+    file { "${context_dir}":
+        ensure => "directory",
+        owner  => "${service_owner}",
+        group  => "${service_group}",
+        mode   => 0770,
+    }
+
 
 ->
 
@@ -133,5 +163,20 @@ define dspace::install ($owner,
      user => $owner,
      logoutput => true,
    }
+
+-> 
+
+   # and, let's ensure that probe.war is actually loaded by putting in place this context fragment for Tomcat
+   file { "${tomcat_dir}/conf/Catalina/localhost/probe.xml":
+     ensure => file,
+     owner => $owner,
+     group => $group,
+     mode => 0644,
+     backup => ".puppet-bak",  # If replaced, backup old settings to .puppet-bak
+     content => template("dspace/probe.xml.erb"),
+     require => Exec["Install DSpace to ${install_dir}"],
+   }
+
+
 
 }
