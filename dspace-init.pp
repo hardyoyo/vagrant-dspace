@@ -86,14 +86,19 @@ postgresql::db { 'dspace':
   password => 'dspace'
 }
 
-include tomcat
+# set up the Example42 Tomcat instance
+tomcat::instance { 'vagrant':
+   owner         => "vagrant",
+   group         => "vagrant",
+   manager       => false,
+}
 
 # Create a new Tomcat instance
-tomcat::instance { 'dspace':
-   owner => "vagrant",
-   appBase => "/home/vagrant/dspace/webapps", # Tell Tomcat to load webapps from this directory
-   ensure    => present,
-}
+#tomcat::instance { 'dspace':
+#   owner => "vagrant",
+#   appBase => "/home/vagrant/dspace/webapps", # Tell Tomcat to load webapps from this directory
+#   ensure    => present,
+#}
 
 ->
 

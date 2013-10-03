@@ -6,6 +6,6 @@ forge "http://forge.puppetlabs.com"
 mod "puppetlabs/postgresql"
 mod "saz/vim"
 
-# Install Tim's simple Tomcat module from GitHub
-mod "tomcat",
-   :git => "http://github.com/tdonohue/puppet-tomcat.git"
+# Install the Example42 puppet-tomcat module
+mod "example42/puppi"
+mod "example42/tomcat"
