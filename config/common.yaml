@@ -1,6 +1,9 @@
 ---
 
-git_repo          : 'git@github.com:DSpace/DSpace.git'
+upstream_git_repo : 'git@github.com:DSpace/DSpace.git'
+enable_PR_refs    : true
+
+git_repo          : 'git@github.com:hardyoyo/DSpace.git'
 git_branch        : 'master'
 mvn_params        : '-Denv=vagrant'
 
