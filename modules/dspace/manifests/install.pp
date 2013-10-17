@@ -153,24 +153,27 @@ define dspace::install ($owner,
     # if upstream_git_repo is not blank, *AND* it's not the same as git_repo, then add an upstream repository
     #if defined("upstream_git_repo") {
     #    if (${upstream_git_repo} != ${git_repo}) {
+->
 
-	    exec { "Add upstream git repository: ${upstream_git_repo}" :
-	       command => "git remote add upstream ${upstream_git_repo}",
+    exec { "Add upstream git repository: ${upstream_git_repo}" :
+       command => "git remote add upstream ${upstream_git_repo}",
+       cwd     => $src_dir, # run command from this directory
+       user    => $owner,
+       # Only perform this if the upstream remote has not already been set
+	onlyif  => "git remote -v | grep -vw upstream | grep -vw origin",
+    }
+
+->
+
+ #  if ($enable_PR_refs) {
+	   exec { "enable fetching pull request refs from upstream" :
+	       command => "git config —add remote.upstream.fetch +refs/pull/*/head:refs/remotes/upstream/pr/*",
 	       cwd     => $src_dir, # run command from this directory
 	       user    => $owner,
-	       # Only perform this if the upstream remote has not already been set
-		onlyif  => "git remote -v | grep -vw upstream | grep -vw origin",
+	       # Only perform this if the fetch line has not already been set
+		onlyif  => "git config --get remote.upstream.fetch | grep -vw pr",
 	    }
-
-           if ($enable_PR_refs) {
-		   exec { "enable fetching pull request refs from upstream" :
-		       command => "git config —add remote.upstream.fetch +refs/pull/*/head:refs/remotes/upstream/pr/*",
-		       cwd     => $src_dir, # run command from this directory
-		       user    => $owner,
-		       # Only perform this if the fetch line has not already been set
-			onlyif  => "git config --get remote.upstream.fetch | grep -vw pr",
-		    }
-            }
+#    }
 
      #   }
     #}
