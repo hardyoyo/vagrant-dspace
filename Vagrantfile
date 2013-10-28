@@ -134,7 +134,9 @@ Vagrant.configure("2") do |config|
 
     # Shell script to initialize latest Puppet on VM
     # Borrowed from https://github.com/hashicorp/puppet-bootstrap/
-    config.vm.provision :shell, :path => "puppet-bootstrap-ubuntu.sh"
+    #config.vm.provision :shell, :path => "puppet-bootstrap-ubuntu.sh"
+
+    config.librarian_puppet.puppetfile_dir = "puppet"
 
     # This shell provisioner installs librarian-puppet and runs it to install
     # puppet modules. This has to be done before the puppet provisioning so that
@@ -151,7 +153,7 @@ Vagrant.configure("2") do |config|
         }
         puppet.manifests_path = "."
         puppet.manifest_file = "dspace-init.pp"
-        puppet.module_path = "modules"
+        puppet.module_path = "puppet/modules"
         puppet.options = "--verbose"
         puppet.hiera_config_path = "hiera.yaml"
     end
