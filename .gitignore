@@ -1,2 +1,5 @@
 # Ignore Vagrant settings
 .vagrant/
+
+# Ignore vagrant-librarian's tmp directory
+.tmp/

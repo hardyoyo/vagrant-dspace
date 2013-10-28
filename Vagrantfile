@@ -139,7 +139,7 @@ Vagrant.configure("2") do |config|
     # This shell provisioner installs librarian-puppet and runs it to install
     # puppet modules. This has to be done before the puppet provisioning so that
     # the modules are available when puppet tries to parse its manifests.
-    config.vm.provision :shell, :path => "librarian-puppet-bootstrap.sh"
+    #config.vm.provision :shell, :path => "librarian-puppet-bootstrap.sh"
 
     # Call our Puppet initialization script
     config.vm.provision :puppet do |puppet|

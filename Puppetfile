@@ -9,3 +9,7 @@ mod "saz/vim"
 # Install Tim's simple Tomcat module from GitHub
 mod "tomcat",
    :git => "http://github.com/tdonohue/puppet-tomcat.git"
+
+# Install puppet-dspace from Hardy's GitHub repository
+mod "dspace",
+   :git => "http://github.com/hardyoyo/puppet-dspace.git"
