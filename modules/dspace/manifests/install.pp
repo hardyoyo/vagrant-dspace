@@ -19,7 +19,8 @@
 # - $git_repo           => Git repository to pull DSpace source from. Defaults to DSpace/DSpace in GitHub
 # - $git_branch         => Git branch to build DSpace from. Defaults to "master".
 # - $upstream_git_repo  => Git repository to use as an upstream repository (useful if git_repo is set to a fork of DSpace). Defaults to DSpace/DSpace in GitHub
-# - $enable_PR_refs     => only makes sense if you have an upstream_git_repo, default true
+# - $enable_upstream    => controls whether this Puppet module will attempt to add an upstream_git_repo, default false
+# - $enable_PR_refs     => only makes sense if you have an upstream_git_repo, default false
 # - $mvn_params         => Any build params passed to Maven. Defaults to "-Denv=vagrant" which tells Maven to use the vagrant.properties file.
 # - $ant_installer_dir  => Full path of directory where the Ant installer is built to (via Maven).
 # - $admin_firstname    => First Name of the created default DSpace Administrator account.
@@ -48,6 +49,7 @@ define dspace::install ($owner,
 
                         $git_repo          = hiera('git_repo'),
                         $upstream_git_repo = hiera('upstream_git_repo'),
+                        $enable_upstream   = hiera('upstream_git_repo'),
                         $enable_PR_refs    = hiera('enable_PR_refs'),
                         $git_branch        = hiera('git_branch'),
                         $mvn_params        = hiera('mvn_params'),

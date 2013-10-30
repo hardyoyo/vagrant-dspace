@@ -1,9 +1,10 @@
 ---
 
 upstream_git_repo : 'git@github.com:DSpace/DSpace.git'
-enable_PR_refs    : true
+enable_upstream   : false
+enable_PR_refs    : false
 
-git_repo          : 'git@github.com:hardyoyo/DSpace.git'
+git_repo          : 'git@github.com:DSpace/DSpace.git'
 git_branch        : 'master'
 mvn_params        : '-Denv=vagrant'
 
