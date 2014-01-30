@@ -30,12 +30,12 @@
 # Sample Usage:
 # dspace::install {
 #    owner      => "vagrant",
-#    version    => "4.0-SNAPSHOT",
 #    git_branch => "master",
 # }
 #
 define dspace::install ($owner,
-                        $version,
+                        # use the custom fact dspace_version to determine the dspace version we're building
+                        $version           = $::dspace_version,
                         $group             = $owner,
                         $src_dir           = "/home/${owner}/dspace-src", 
                         $install_dir       = "/home/${owner}/dspace",
@@ -47,7 +47,12 @@ define dspace::install ($owner,
                         $git_repo          = hiera('git_repo'),
                         $git_branch        = hiera('git_branch'),
                         $mvn_params        = hiera('mvn_params'),
-                        $ant_installer_dir = hiera('ant_installer_dir'),
+
+                        #$ant_installer_dir = hiera('ant_installer_dir'),
+                        #stop setting this from hiera, figure it out by inspecting the pom.xml instead
+
+                        $ant_installer_dir = "/home/${owner}/dspace-src/dspace/target/${version}-build",
+
                         $admin_firstname   = hiera(admin_firstname),
                         $admin_lastname    = hiera(admin_lastname),
                         $admin_email       = hiera(admin_email),
