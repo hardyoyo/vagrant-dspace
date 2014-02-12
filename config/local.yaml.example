@@ -12,10 +12,12 @@ git_repo          : 'git@github.com:yourgithubusername/DSpace.git'
 git_branch        : 'master'
 mvn_params        : '-Denv=vagrant'
 
-# This is a hack, we'd like for there to be a better way to determine where the
-# ant installer ends up after running mvn package, but, for now, we're hard 
-# coding it. See DS-1760, and pitch in if you have a solution.
-ant_installer_dir : '/home/vagrant/dspace-src/dspace/target/dspace-5.0-SNAPSHOT-build'
+# DSpace now builds its installer in a standard folder, target/dspace-installer, if you're building the master branch of DSpace, or any branch that includes the commit represented by
+# SHA 93fc28277e2414ffe8da4f9c5da453bc597104bc (you can find this by running git branch --contains 93fc2827) if you're building an older version of DSpace, or your branch changes this default installer
+# path for some other reason, you can over-ride the ant_isntaller_dir here. But it should not be necessary to override this setting, and we're commenting it out in this example file, just in case
+# you don't read this comment, you'll still be able to build the master branch of DSpace using this example local.yaml file.
+
+#ant_installer_dir : '/home/vagrant/dspace-src/dspace/target/dspace-5.0-SNAPSHOT-build'
 
 admin_firstname   : 'YourFirstName'
 admin_lastname    : 'YourLastName'
