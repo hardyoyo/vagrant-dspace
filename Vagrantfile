@@ -44,6 +44,9 @@ Vagrant.configure("2") do |config|
     # options are documented and commented below. For a complete reference,
     # please see the online documentation at vagrantup.com.
 
+    # define a name for this box, so it's not known as "default"
+    config.vm.define "dspace"
+
     # Every Vagrant virtual environment requires a box to build off of.
     config.vm.box = "dspace-precise64"
 
@@ -188,6 +191,11 @@ Vagrant.configure("2") do |config|
         config.vm.provision :shell, :path => "config/local-bootstrap.sh"
     end
 
+    # allow access to the dspace and dspace-src folders, so we can use a
+    # host-based IDE
+    config.vm.synced_folder "dspace-src/", "/home/vagrant/dspace-src"
+    config.vm.synced_folder "dspace/", "/home/vagrant/dspace"
+
     #############################################
     # Customized provider settings for VirtualBox
     # Many of these settings use VirtualBox's
@@ -212,4 +220,5 @@ Vagrant.configure("2") do |config|
         # Borrowed from https://github.com/purple52/librarian-puppet-vagrant/
         vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
     end
+
 end

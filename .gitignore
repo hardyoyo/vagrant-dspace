@@ -4,3 +4,10 @@
 # Ignore anything in "content/" subfolder, except for "content/README"
 /content/
 !/content/README
+
+# Ignore the dspace and dspace-src folders
+/dspace/
+!/dspace/README
+
+/dspace-src/
+!/dspace-src/README
