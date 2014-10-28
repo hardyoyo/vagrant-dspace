@@ -95,6 +95,11 @@ Vagrant.configure("2") do |config|
     config.vm.network :forwarded_port, guest: 8080, host: 8080,
       auto_correct: true
 
+    # forward port 8000 for debugging
+    config.vm.network :forwarded_port, guest: 8000, host: 8000,
+      auto_correct: true
+
+
     # If a port collision occurs (i.e. port 8080 on local machine is in use),
     # then tell Vagrant to use the next available port between 8081 and 8100
     config.vm.usable_port_range = 8081..8100

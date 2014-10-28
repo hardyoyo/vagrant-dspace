@@ -114,6 +114,30 @@ define dspace::install ($owner,
 
 ->
 
+   # Create an 'oracle-vagrant.properties' file which will be used to build the DSpace installer
+   # (INSTEAD OF the default 'build.properties' file that DSpace normally uses)
+   file { "${src_dir}/oracle-vagrant.properties":
+     ensure  => file,
+     owner   => $owner,
+     group   => $group,
+     mode    => 0644,
+     backup  => ".puppet-bak",  # If replaced, backup old settings to .puppet-bak
+     content => template("dspace/oracle-vagrant.properties.erb"),
+   }
+
+->
+
+  # install the oracle driver
+
+    exec { "install the oracle DB driver for use with maven" :
+       command => "mvn install:install-file -Dfile=/vagrant/config/ojdbc6.jar -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.2.0.2.0 -Dpackaging=jar -DgeneratePom=true",
+       user    => $owner,
+    }
+
+
+
+->
+
    # Build DSpace installer.
    # (NOTE: by default, $mvn_params='-Denv=vagrant', which tells Maven to use the vagrant.properties file created above)
    exec { "Build DSpace installer in ${src_dir}":
