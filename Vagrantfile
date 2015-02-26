@@ -257,7 +257,12 @@ Vagrant.configure("2") do |config|
         vb.customize ["modifyvm", :id, "--ostype", 'Ubuntu']
 
         # Use VBoxManage to provide Virtual Machine with extra memory (default is only 300MB)
-        vb.customize ["modifyvm", :id, "--memory", CONF['vm_memory']]
+        #vb.customize ["modifyvm", :id, "--memory", CONF['vm_memory']]
+
+        # lets use 4G of RAM and two CPUs, OK?
+        vb.memory = 4096
+        vb.cpus = 2
+
 
         if CONF['vb_max_cpu']
           # Use VBoxManage to ensure Virtual Machine only has access to a percentage of host CPU
