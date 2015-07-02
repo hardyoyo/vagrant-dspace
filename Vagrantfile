@@ -36,6 +36,17 @@ end
 # Currently, we require Vagrant 1.6.0 or above.
 Vagrant.require_version ">= 1.6.0"
 
+
+#####################################
+# Include a few push configuration files in config/push
+#if File.exists?("config/push/staging")
+#  load 'config/push/staging'
+#end
+#if File.exists?("config/push/production")
+#  load 'config/push/production'
+#end
+
+
 # Actual Vagrant configs
 Vagrant.configure("2") do |config|
     # All Vagrant configuration is done here. The most common configuration
@@ -104,13 +115,18 @@ Vagrant.configure("2") do |config|
        # and lets specifically use the apt cache (note, this is a Debian-ism)
        config.cache.enable :apt
 
+       # Mirage2 uses Grunt, which uses NPM, let's use cache for that
+       #config.cache.enable :npm
+
        # use the generic cache bucket for Maven
        config.cache.enable :generic, {
              "maven" => { cache_dir: "/home/vagrant/.m2/repository" },
+             "mirage2" => {cache_dir: "/home/vagrant/dspace-src/dspace/target/dspace-installer/webapps/xmlui/themes/Mirage2" },
        }
 
-       # set the permissions for .m2 so we can use Maven properly
+       # set the permissions for cache folders
        config.vm.provision :shell, :inline => "chown vagrant:vagrant /home/vagrant/.m2"
+       config.vm.provision :shell, :inline => "chown vagrant:vagrant /home/vagrant/dspace-src/dspace/target/dspace-installer/webapps/xmlui/themes/Mirage2"
     end
     # END Vagrant-Cachier configuration
 
