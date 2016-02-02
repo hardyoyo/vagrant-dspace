@@ -1,5 +1,5 @@
 # Ignore any .yaml files except default.yaml
-*.yaml
+*.yaml*
 !default.yaml
 
 # Ignore any customized local-bootstrap.sh file

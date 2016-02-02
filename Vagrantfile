@@ -55,10 +55,14 @@ Vagrant.configure("2") do |config|
     end
 
     # define this box so Vagrant doesn't call it "default"
-    config.vm.define "vagrant-dspace"
+    config.vm.define "vagrant-mospace"
 
-    # Hostname for virtual machine
-    config.vm.hostname = "dspace.vagrant.dev"
+    # Hostname for virtual machin
+    if CONF['vm_hostname']
+        config.vm.hostname = CONF['vm_hostname']
+    else
+        config.vm.hostname = "dspace.vagrant.dev"
+    end
 
     #-----------------------------
     # Network Settings
@@ -285,9 +289,9 @@ Vagrant.configure("2") do |config|
     # https://github.com/fgrehm/vagrant-notify
     # NOTE: Currently this plugin only works on Linux or OSX hosts
     if Vagrant.has_plugin?('vagrant-notify')
-        config.vm.provision :shell, :inline => "notify-send --urgency=critical 'Vagrant-DSpace is up! Get back to work! :-)'", run: "always"
+        config.vm.provision :shell, :inline => "notify-send --urgency=critical 'Vagrant-MOspace is up! Get back to work! :-)'", run: "always"
     end
 
     # Message to display to user after 'vagrant up' completes
-    config.vm.post_up_message = "Setup of 'vagrant-dspace' is now COMPLETE! DSpace should now be available at:\n\nhttp://localhost:#{CONF['port']}/xmlui/\nLOGIN: '#{CONF['admin_email']}', PASSWORD: '#{CONF['admin_passwd']}'\n\nThe DSpace database is accessible via local port #{CONF['db_port']}.\nYou can SSH into the new VM via 'vagrant ssh'"
+    config.vm.post_up_message = "Setup of 'vagrant-mospace' is now COMPLETE! DSpace should now be available at:\n\nhttp://localhost:#{CONF['port']}/xmlui/\nLOGIN: '#{CONF['admin_email']}', PASSWORD: '#{CONF['admin_passwd']}'\n\nThe DSpace database is accessible via local port #{CONF['db_port']}.\nYou can SSH into the new VM via 'vagrant ssh'"
 end
