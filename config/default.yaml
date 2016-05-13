@@ -45,9 +45,14 @@ port       : 8080
 # Local port which will access PostgreSQL on this VM
 # This allows you to access the VM's DSpace database via pgAdminIII, or even debug code
 # (via a locally installed IDE) while using this database.
-# NOTE: if this port is already in use, Vagrant will use the next available port between 8081 and 8100
+# NOTE: if this port is already in use, Vagrant will use the next available port after 5432
 # (Changes to this setting require a 'vagrant reload' to take effect)
 db_port    : 5432
+
+# Local port which will access the Node.js server on this VM
+# NOTE: if this port is already in use, Vagrant will use the next available port after 3000
+# (Changes to this setting require a 'vagrant reload' to take effect)
+node_port  : 3000
 
 # Whether to sync the ~/dspace-src/ (DSpace Source) to the host machine
 # (under [vagrant-dspace]/dspace-src/).
@@ -76,13 +81,13 @@ vm_gui_mode     : false
 # DSpace Source Code settings
 #-----------------------------
 # By default, we are always grabbing the DSpace Source code from GitHub
-# We use the "master" branch by default.
+# We use the "dspace-5_x" branch by default, as that is the requirement for AngularUI right now.
 # NOTE: While this defaults to using the SSH GitHub URL, if the SSH connection fails
 # it will be dynamically changed into the HTTPS GitHub URL (https://github.com/[user]/[proj])
 # You may also change "git_repo" to an HTTPS URL in order to force HTTPS at all times.
 # (Changes to these settings require a 'vagrant destroy && vagrant up' to take effect)
 git_repo          : 'git@github.com:DSpace/DSpace.git'
-git_branch        : 'master'
+git_branch        : 'dspace-5_x'
 
 #-------------------------------
 # DSpace Administrative Account

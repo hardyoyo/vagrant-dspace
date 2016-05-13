@@ -76,6 +76,10 @@ Vagrant.configure("2") do |config|
     config.vm.network :forwarded_port, guest: 5432, host: CONF['db_port'],
       auto_correct: true
 
+    # Forward Node.js dev server port (3000) to local machine port (for DB & pgAdmin3 access)
+    config.vm.network :forwarded_port, guest: 3000, host: CONF['node_port'],
+      auto_correct: true
+
     # If a port collision occurs (e.g. port 8080 on local machine is in use),
     # then tell Vagrant to use the next available port between 8081 and 8100
     config.vm.usable_port_range = 8081..8100
@@ -225,6 +229,18 @@ Vagrant.configure("2") do |config|
         puppet.manifest_file = "setup.pp"
         puppet.options = "--verbose"
     end
+
+    # call angularui-bootstrap.sh and allow for a local override as well
+    if File.exists?("config/angularui-bootstrap.sh")
+        config.vm.provision :shell, :inline => "echo '   > > > running local angularui-bootstrap.sh.'"
+        config.vm.provision :shell, :path => "config/angularui-bootstrap.sh"
+    else
+        config.vm.provision :shell, :inline => "echo '   > > > running default angularui-bootstrap.sh.'"
+        config.vm.provision :shell, :path => "angularui-bootstrap.sh"
+    end
+
+
+
 
     #-------------------------------------
     # Local customizations to VM
