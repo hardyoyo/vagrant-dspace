@@ -240,10 +240,10 @@ dspace::install { 'vagrant-dspace':
 # Install PSI Probe
 #---------------------
 # For convenience in troubleshooting Tomcat, let's install Psi-probe
-# http://psi-probe.googlecode.com/
-$probe_version = "2.3.3"
+# https://github.com/psi-probe/psi-probe/releases/download/2.4.0.SP1/probe.war
+$probe_version = "2.4.0.SP1"
 exec {"Download and install the PSI Probe v${probe_version} war":
-  command   => "wget --quiet --continue https://psi-probe.googlecode.com/files/probe-${probe_version}.zip && unzip -u probe-${probe_version}.zip && rm probe-${probe_version}.zip",
+  command   => "wget --quiet --continue https://github.com/psi-probe/psi-probe/releases/download/${probe_version}/probe.war",
   cwd       => "${catalina_base}/webapps",
   creates   => "${catalina_base}/webapps/probe.war",
   user      => "vagrant",
