@@ -60,7 +60,7 @@ set -e  # reenable exit on error
 # If previous apt-get errored out, re-run apt-spy2 with ubuntu list of mirrors (i.e. not launchpad)
 if [ $RESULT -ne 0 ]; then
   echo "Initial apt-get update failed. Trying a different mirror as a fallback..."
-  sudo apt-spy2 fix --commit --country=$COUNTRY
+  sudo apt-spy2 fix --commit
   echo "Re-running apt-get update after sources updated (again)..."
   sudo apt-get update >/dev/null
 fi

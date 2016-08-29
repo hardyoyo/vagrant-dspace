@@ -89,7 +89,7 @@ define dspace::install ($owner,
         cwd       => $src_dir, # run command from this directory
         logoutput => true,
         tries     => 2,    # try 2 times
-        timeout   => 600,  # set a 10 min timeout. GitHub is sometimes slow. If it's too slow, might as well get everything else done
+        timeout   => 1200,  # set a 20 min timeout. GitHub is sometimes slow. If it's too slow, might as well get everything else done
      }
 
 

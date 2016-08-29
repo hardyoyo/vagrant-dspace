@@ -85,6 +85,8 @@ Vagrant.configure("2") do |config|
     #     vagrant plugin install landrush
     if Vagrant.has_plugin?('landrush')
         config.landrush.enable
+        config.landrush.tld = 'vagrant.dev'
+        
         # let's use the Google free DNS
         config.landrush.upstream '8.8.8.8'
         config.landrush.guest_redirect_dns = false
@@ -270,6 +272,11 @@ Vagrant.configure("2") do |config|
 
         # Use VBoxManage to provide Virtual Machine with extra memory (default is only 300MB)
         vb.customize ["modifyvm", :id, "--memory", CONF['vm_memory']]
+
+        # use host DNS, please
+        vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+
+
 
         vb.memory = CONF['vm_memory']
         vb.cpus = CONF['vb_cpus'] 
